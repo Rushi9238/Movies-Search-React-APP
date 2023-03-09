@@ -1,25 +1,44 @@
-import logo from './logo.svg';
+import React, { createContext, useEffect, useState } from 'react';
 import './App.css';
+import SearchBox from './Componets/SearchBox';
+import Result from './Componets/Result';
 
+const ContextData = createContext()
 function App() {
+  const [input, setInput] = useState("")
+  const [button, setButton] = useState("")
+  const [result, setResult] = useState([])
+
+  // console.log(button);
+  useEffect(() => {
+
+    data()
+  }, [button])
+
+  async function data() {
+    const res = await fetch(`https://www.omdbapi.com/?s=${button}&apikey=e2ac1245`)
+    const data = await res.json()
+    console.log(data);
+    setResult(data.Search)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ContextData.Provider value={{ input: input, setInput: setInput, button: button, setButton: setButton,result:result, setResult: setResult }}>
+        <div className="App">
+          <div className='searchdiv'>
+            <h2>Movies APP</h2>
+            <SearchBox />
+          </div>
+          <div className='outputdiv'></div>
+          <Result />
+
+
+        </div>
+      </ContextData.Provider>
+    </>
   );
 }
 
 export default App;
+export { ContextData };
